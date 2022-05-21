@@ -1,0 +1,115 @@
+
+    $spnID = "35674724-2031-450a-96b3-791089f0b916"  
+    $spnSecret =  "Aht7Q~ohOjLQanq~Y.5aBafm~CQNce1OjYhNk"
+    $tenantID="d1b3757b-c097-4cb9-8d04-3aedb1db83b2"
+    $SubscriptionName = "Azure subscription 1"
+    $dataBricksName = "hdp-edh-dev-dbx"
+    $resourceGroupName = "hdp-edh-dev-rg"
+
+    $instance_pool_name = ""
+    $spark_version = "7.3.x-scala2.12"
+    $cluster_name = ""
+    
+    
+
+
+
+#Login to Azure with SPN
+Write-Host "Login to Azure with SPN"
+$pass = ConvertTo-SecureString $spnSecret -AsPlainText -Force
+$psCred = New-Object System.Management.Automation.PSCredential($spnID, $pass)
+Connect-AzAccount -Credential $psCred -TenantId $tenantID  -ServicePrincipal
+Select-AzSubscription -SubscriptionName $SubscriptionName
+
+
+
+$ADB_Details = Get-AzResource -ResourceGroupName   $resourceGroupName -Name $dataBricksName -ExpandProperties
+$dataBricksResourceId = $ADB_Details.Id
+$dataBricksWorkspaceUri = 'https://'+$ADB_Details.Properties.workspaceUrl
+
+
+$ClientID       = $spnID 
+$ClientSecret   = $spnSecret 
+$TenantID = $tenantID
+$management= "https://management.core.windows.net/";
+$dbricksresource= "2ff814a6-3304-4ab8-85cb-cd0e6f879c1d"
+
+function Get-Token([string]$TenantID, [string]$ClientID, [string]$ClientSecret,[string]$ARMResource)
+{
+  $TokenEndpoint = {https://login.windows.net/{0}/oauth2/token} -f $TenantID 
+  $ARMResource = $ARMResource;
+
+  $Body = @{
+          'resource'= $ARMResource
+          'client_id' = $ClientID
+          'grant_type' = 'client_credentials'
+          'client_secret' = $ClientSecret
+  }
+
+  $params = @{
+      ContentType = 'application/x-www-form-urlencoded'
+      Headers = @{'accept'='application/json'}
+      Body = $Body
+      Method = 'Post'
+      URI = $TokenEndpoint
+  }
+
+  $token = Invoke-RestMethod @params
+  Return $token
+  Write-Host $token
+}
+
+
+$dbricktoken = Get-Token $TenantID $ClientID $ClientSecret $dbricksresource
+$dbricktoken = "Bearer " + ($dbricktoken.access_token).ToString()
+
+$mgmttoken = Get-Token $TenantID $ClientID $ClientSecret $management
+
+
+$headers = @{
+'Authorization'= $dbricktoken
+'X-Databricks-Azure-SP-Management-Token'= $mgmttoken.access_token
+'X-Databricks-Azure-Workspace-Resource-Id'= $dataBricksResourceId
+}
+
+
+  $poolbody = "{
+    `n  `"instance_pool_name`": `"$instance_pool_name`",
+    `n  `"node_type_id`": `"$node_type_id`",
+    `n  `"min_idle_instances`": 10,
+    `n    `"max_capacity`": 200,
+    `n    `"idle_instance_autotermination_minutes`": 30
+    `n  `"custom_tags`": [
+    `n    {
+    `n      `"key`": `"my-key`",
+    `n      `"value`": `"my-value`"
+    `n    }
+    `n  ]
+    `n}"
+
+
+$dBrickspoolUri=  "$($dataBricksWorkspaceUri)/api/2.0/instance-pools/create"
+$dBrickspool = Invoke-RestMethod -Method Post -Uri $dBrickspoolUri -Headers $headers -Body $poolbody -Verbose
+
+  $dBrickspool.instance_pool_id
+
+
+$body = "{
+  `n  `"cluster_name`": `"$cluster_name`",
+  `n  `"spark_version`": `"$spark_version`",
+  `n  `"driver_instance_pool_id`": `"$dBrickspool.instance_pool_id`",
+  `n  `"instance_pool_id`": `"$dBrickspool.instance_pool_id`",
+  `n  `"spark_conf`": {
+  `n    `"spark.speculation`": true
+  `n  },
+  `n  `"num_workers`": 25
+  `n}"
+
+$body = $body | ConvertTo-Json
+
+Write-Host "Creating new cluster with details $($body)"
+
+$dBricksClusterUri=  "$($dataBricksWorkspaceUri)/api/2.0/clusters/create"
+$dBricksCluster = Invoke-RestMethod -Method Post -Uri $dBricksClusterUri -Headers $headers -Body $body -Verbose
+
+Write-Host "DataBricks  Cluster " $dBricksCluster.cluster_name "created  Successfully"

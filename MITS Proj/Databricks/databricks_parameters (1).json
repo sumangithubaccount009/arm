@@ -1,0 +1,51 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workspaceName": {
+            "value": "hdp-edh-dev-dbx"
+        },
+        "location": {
+            "value": "eastus"
+        },
+        "tier": {
+            "value": "standard"
+        },
+        "tagValues": {
+            "value": {
+                "ENV": "DEV",
+                "PROJECT": "EDH"
+            }
+        },
+        "enableNoPublicIp": {
+            "value": true
+        },
+        "vnetName": {
+            "value": "testvnet2"
+        },
+        "vnetRG": {
+            "value": "testrg1"
+        },
+        "vnetId": {
+            "value": "/subscriptions/05ee859f-a527-4975-91c3-d2711f14b894/resourceGroups/testrg1/providers/Microsoft.Network/virtualNetworks/testvnet2"
+        },
+        "routeTablesParam": {
+            "value": "/subscriptions/05ee859f-a527-4975-91c3-d2711f14b894/resourceGroups/testrg1/providers/Microsoft.Network/routeTables/adbrttest"
+        },
+        "publicSubnetName": {
+            "value": "hdp-edh-dev-snet-pub-dbx"
+        },
+        "publicSubnetCIDR": {
+            "value": "10.1.0.0/24"
+        },
+        "privateSubnetName": {
+            "value": "hdp-edh-dev-snet-pvt-dbx"
+        },
+        "privateSubnetCIDR": {
+            "value": "10.1.1.0/24"
+        },
+        "nsgName":{
+            "value": "hdp-edh-dev-dbx-nsg1"
+        }
+    }
+}

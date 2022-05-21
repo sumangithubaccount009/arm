@@ -1,0 +1,68 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serverName": {
+            "value": "" 
+        },
+        "sqlDBName": {
+            "value": "SampleDB"
+        },
+        "location": {
+            "value": "" 
+        },
+        "administratorLogin": {
+            "value": "" 
+        },
+        "administratorLoginPassword": {
+            "value": "" 
+        },
+        "networkrg": {
+            "value": "" 
+        },
+        "virtualNetworkName": {
+            "value": "SQLMI-VNET"
+        },
+        "subnetName": {
+            "value": "ManagedInstance"
+        },
+        "skuName": {
+            "value": "GP_Gen5"
+        },
+        "vCores": {
+            "value": 16
+        },
+        "storageSizeInGB": {
+            "value": 256
+        },
+        "licenseType": {
+            "value": "LicenseIncluded"
+        },
+        "tags": {
+            "value": {
+                
+            }
+        },
+        "zoneRedundant": {
+            "value": false
+        },
+        "administrators": {
+            "value": {}
+        },
+        "tier": {
+            "value": "" 
+        },
+        "numberOfReplicas": {
+            "value": 0
+        },
+        "allowClientIp": {
+            "value": false
+        },
+        "clientIpRuleName": {
+            "value": "newclient"
+        },
+        "clientIpValue": {
+            "value": ""
+        }
+    }
+}

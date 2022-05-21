@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "DatabaseName1": {
+            "value": "hdp-edc-prd-sqldb/hdp-edc-wkf-prd-sqldb"
+        },
+		
+        "DatabaseName2": {
+            "value": "hdp-edc-prd-sqldb/hdp-edc-mrs-prd-sqldb"
+        },
+		
+        "DatabaseName3": {
+            "value": "hdp-edc-prd-sqldb/hdp-edc-mon-prd-sqldb"
+        },
+		
+        "DatabaseName4": {
+            "value": "hdp-edc-prd-sqldb/hdp-edc-pwh-prd-sqldb"
+        },
+		
+        "DatabaseName5": {
+            "value": "hdp-edc-prd-sqldb/hdp-edc-ref-prd-sqldb"
+        },
+		
+        "DatabaseName6": {
+            "value": "hdp-edc-prd-sqldb/hdp-edc-doc-prd-sqldb"
+        },
+		
+        "DatabaseName7": {
+            "value": "hdp-edc-prd-sqldb/hdp-edc-daa-prd-sqldb"
+        },
+        "location": {
+            "value": "eastus" 
+        },
+        "tags": {
+            "value": {
+                    "ENV": "PRD",
+                    "PROJECT": "EDC",
+                    "CostCenter": "6711",
+                    "BusinessUnit": "Advanced_Analytics",
+                    "Owner": "rgelburd@hersheys.com"
+            }
+        }
+    }
+}

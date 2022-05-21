@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "keyVaultName": {
+            "value": "Testkeyvault11" 
+        },
+        "location": {
+            "value": "eastus" 
+        },
+        "enabledForDeployment": {
+            "value": false
+        },
+        "enabledForDiskEncryption": {
+            "value": false
+        },
+        "enabledForTemplateDeployment": {
+            "value": false
+        },
+        "tenantId": {
+            "value": "90254b37-ddd6-4784-a73c-67a28484e423" 
+        },
+        "objectId": {
+            "value": "49697563-fdb6-4dc1-84e3-19c25d0621a1" 
+        },
+        "keysPermissions": {
+            "value": [
+              "list"
+            ]
+        },
+        "secretsPermissions": {
+            "value": [
+              "list"
+            ]
+        },
+        "skuName": {
+            "value": "standard"
+        },
+        "secretName": {
+            "value": "test" 
+        },
+        "secretValue": {
+            "value": "test"
+        }
+    }
+}

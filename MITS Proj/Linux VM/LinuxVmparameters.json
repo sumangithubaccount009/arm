@@ -1,0 +1,65 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Vmname": {
+            "value": "hdpedci04vm" 
+        },
+        "location": {
+            "value": "eastus"
+        },
+        "adminUsername": {
+            "value": "azadmin"
+        },
+        "authenticationType": {
+            "value": "password"
+        },
+        "adminPasswordOrKey": {
+            "value": "1qaz2wsx3edc4rfv5tgbG"
+        },
+        "vmSize": {
+            "value": "Standard_D2_v4"
+        },
+        "Vnetname": {
+            "value": "testvnet01"
+        },
+        "Subnetname": {
+            "value": "default"
+        },
+        "networkrg": {
+            "value": "testrg1"
+        },
+        "osDiskType": {
+            "value": "Standard_LRS"
+        },
+        "dataDisks": {
+            "value": [
+                {
+                    "lun": 0,
+                    "createOption": "attach",
+                    "caching": "ReadOnly",
+                    "writeAcceleratorEnabled": false,
+                    "id": null,
+                    "name": "cvxgxvcxvcxv_DataDisk_0",
+                    "storageAccountType": null,
+                    "diskSizeGB": null,
+                    "diskEncryptionSet": null
+                }
+            ]
+        },
+        "dataDiskResources": {
+            "value": [
+                {
+                    "name": "cvxgxvcxvcxv_DataDisk_0",
+                    "sku": "Standard_LRS",
+                    "properties": {
+                        "diskSizeGB": 1024,
+                        "creationData": {
+                            "createOption": "empty"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

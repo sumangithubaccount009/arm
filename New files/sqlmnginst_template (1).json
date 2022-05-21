@@ -1,0 +1,190 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.4.412.5873",
+      "templateHash": "12536359447865472095"
+    }
+  },
+  "parameters": {
+    "managedInstanceName": {
+      "type": "string",
+      "metadata": {
+        "description": "Enter managed instance name."
+      }
+    },
+    "administratorLogin": {
+      "type": "string",
+      "metadata": {
+        "description": "Enter user name."
+      }
+    },
+    "administratorLoginPassword": {
+      "type": "secureString",
+      "metadata": {
+        "description": "Enter password."
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Enter location. If you leave this field blank resource group location would be used."
+      }
+    },
+
+    "networkrg": {
+     "type": "string",
+     "metadata": {
+       "description":"resourcegroup of vnet"
+     }
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "defaultValue": "SQLMI-VNET",
+      "metadata": {
+        "description": "Enter virtual network name. If you leave this field blank name will be created by the template."
+      }
+    },
+ 
+    "subnetName": {
+      "type": "string",
+      "defaultValue": "ManagedInstance",
+      "metadata": {
+        "description": "Enter subnet name."
+      }
+    },
+ 
+    "skuName": {
+      "type": "string",
+      "defaultValue": "GP_Gen5",
+      "allowedValues": [
+        "GP_Gen5",
+        "BC_Gen5"
+      ],
+      "metadata": {
+        "description": "Enter sku name."
+      }
+    },
+    "vCores": {
+      "type": "int",
+      "defaultValue": 16,
+      "allowedValues": [
+        4,
+        8,
+        16,
+        24,
+        32,
+        40,
+        64,
+        80
+      ],
+      "metadata": {
+        "description": "Enter number of vCores."
+      }
+    },
+    "storageSizeInGB": {
+      "type": "int",
+      "defaultValue": 256,
+      "maxValue": 8192,
+      "minValue": 32,
+      "metadata": {
+        "description": "Enter storage size."
+      }
+    },
+     "aad_admin_name": {
+            "type": "String",
+            "metadata": {
+                "description": "The name of the Azure AD admin for the SQL server."
+            }
+        },
+      "aad_admin_objectid": {
+            "type": "String",
+            "metadata": {
+                "description": "The Object ID of the Azure AD admin."
+            }
+        },  
+        "aad_admin_tenantid": {
+            "type": "String",
+            "defaultValue": "[subscription().tenantId]",
+            "metadata": {
+                "description": "The Tenant ID of the Azure Active Directory"
+            }
+        },
+        "aad_admin_type": {
+            "defaultValue": "User",
+            "allowedValues": [
+                "User",
+                "Group",
+                "Application"
+            ],
+            "type": "String"
+        },
+        "aad_only_auth": {
+            "defaultValue": true,
+            "type": "Bool"
+        },
+    
+    "licenseType": {
+      "type": "string",
+      "defaultValue": "LicenseIncluded",
+      "allowedValues": [
+        "BasePrice",
+        "LicenseIncluded"
+      ],
+      "metadata": {
+        "description": "Enter license type."
+      }
+    }
+    
+  },
+  "functions": [],
+  
+  
+  "resources": [
+   
+    
+    
+    {
+      "type": "Microsoft.Sql/managedInstances",
+      "apiVersion": "2020-02-02-preview",
+      "name": "[parameters('managedInstanceName')]",
+      "location": "[parameters('location')]",
+	  "tags": {
+                "ENV": "DEV",
+                "PROJECT":"EDC",
+                "CostCenter": "6711",
+                "BusinessUnit": "Advanced_Analytics",
+                "Owner": "rgelburd@hersheys.com"
+            },
+      "sku": {
+        "name": "[parameters('skuName')]"
+      },
+      "identity": {
+        "type": "SystemAssigned"
+			
+      },
+      "properties": {
+        "administratorLogin": "[parameters('administratorLogin')]",
+        "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+            "administrators": {
+          "administratorType": "ActiveDirectory",
+                              "login": "[parameters('aad_admin_name')]",
+                    "sid": "[parameters('aad_admin_objectid')]",
+                    "tenantId": "[parameters('aad_admin_tenantid')]",
+                    "principalType": "[parameters('aad_admin_type')]",
+                    "azureADOnlyAuthentication": "[parameters('aad_only_auth')]"
+        },
+        "subnetId": "[resourceId(parameters('networkrg'),'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]",
+        "storageSizeInGB": "[parameters('storageSizeInGB')]",
+        "vCores": "[parameters('vCores')]",
+        "licenseType": "[parameters('licenseType')]",
+        "collation": "SQL_Latin1_General_CP1_CI_AS"
+      }
+      
+    
+    }
+  ]
+}

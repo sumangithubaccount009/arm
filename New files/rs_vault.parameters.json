@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vaultName": {
+            "value": "hdp-edc-dev-rsvault"
+        },
+        "enableCRR": {
+            "value": true
+        },
+        "vaultStorageType": {
+            "value": "GeoRedundant"
+        },
+        "location": {
+            "value": "eastus" 
+        },
+        "vnetName": {
+            "value": "10.134.122.0_23"
+        },
+        "subnet1Name": {
+            "value": "10.134.122.0_24"
+        },
+        "privateEndpointName": {
+            "value": "hdpedcdevrs-vault-pe"
+        },
+        "Networkrg": {
+            "value": "hdp-network-eastus-dev-rg"
+        }
+    }
+}

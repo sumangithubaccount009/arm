@@ -1,0 +1,137 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+
+      "collation": {
+      "type": "string"
+    },
+        "databaseName": {
+      "type": "string"
+    },   "tier": {
+      "type": "string"
+    },
+    "skuName": {
+      "type": "string"
+    },
+
+    "maxSizeBytes": {
+      "type": "int"
+    },
+    "serverName": {
+      "type": "string"
+    },
+
+    "zoneRedundant": {
+      "type": "bool",
+      "defaultValue": false
+    },
+    "licenseType": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    
+    "aad_only_auth": {
+      "type": "string",
+      "metadata": {
+        "description": "description"
+      }
+    },
+    "aad_admin_type": {
+      "type": "string",
+      "metadata": {
+        "description": "description"
+      }
+    },
+    "aad_admin_tenantid": {
+      "type": "string",
+      "metadata": {
+        "description": "description"
+      }
+    },
+    "aad_admin_objectid": {
+      "type": "string",
+      "metadata": {
+        "description": "description"
+      }
+    },
+    "aad_admin_name": {
+      "type": "string",
+      "metadata": {
+        "description": "description"
+      }
+    },
+    "administratorLoginPassword": {
+      "type": "string",
+      "metadata": {
+        "description": "description"
+      }
+    },
+    "administratorLogin": {
+      "type": "string",
+      "metadata": {
+        "description": "description"
+      }
+    }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+
+        {
+  "type": "Microsoft.Sql/servers",
+  "apiVersion": "2021-05-01-preview",
+  "name": "string",
+  "location": "string",
+  "tags": {
+    "tagName1": "tagValue1",
+    "tagName2": "tagValue2"
+  },
+  "identity": {
+    "type": "string",
+    "userAssignedIdentities": {}
+  },
+   "properties": {
+        "administratorLogin": "[parameters('administratorLogin')]",
+        "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+            "administrators": {
+          "administratorType": "ActiveDirectory",
+                              "login": "[parameters('aad_admin_name')]",
+                    "sid": "[parameters('aad_admin_objectid')]",
+                    "tenantId": "[parameters('aad_admin_tenantid')]",
+                    "principalType": "[parameters('aad_admin_type')]",
+                    "azureADOnlyAuthentication": "[parameters('aad_only_auth')]"
+        }
+
+  }
+},
+
+{
+  "type": "Microsoft.Sql/servers/databases",
+  "apiVersion": "2021-05-01-preview",
+  "name":"[concat(parameters('serverName'), '/', parameters('databaseName'))]",
+  "location": "string",
+  "tags": {
+    "tagName1": "tagValue1",
+    "tagName2": "tagValue2"
+  },
+  
+  "identity": {
+    "delegatedResources": {},
+    "type": "string",
+    "userAssignedIdentities": {}
+  },
+    "properties": {
+            "collation": "[parameters('collation')]",
+            "maxSizeBytes": "[parameters('maxSizeBytes')]",
+            "zoneRedundant": "[parameters('zoneRedundant')]",
+            "licenseType": "[parameters('licenseType')]"
+          },
+          "sku": {
+            "name": "[parameters('skuName')]",
+            "tier": "[parameters('tier')]"
+          }
+}
+    ],
+    "outputs": {}
+}

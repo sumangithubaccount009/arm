@@ -1,0 +1,58 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.4.613.9944",
+      "templateHash": "17779840117539428846"
+    }
+  },
+  "parameters": {
+    "vmName": {
+      "type": "string",
+      "maxLength": 8,
+      "metadata": {
+        "description": "Specifies a name for generating resource names."
+      }
+    },
+    "vaultName": {
+      "type": "string",
+      "metadata": {
+        "description": "description"
+      }
+    }
+
+      
+    
+
+    
+
+    
+  },
+  "functions": [],
+  "variables": {
+    "backupFabric": "Azure",
+    "backupPolicyName": "DefaultPolicy",
+    "protectionContainer": "[format('iaasvmcontainer;iaasvmcontainerv2;{0};{1}', resourceGroup().name, parameters('vmName'))]",
+    "protectedItem": "[format('vm;iaasvmcontainerv2;{0};{1}', resourceGroup().name, parameters('vmName'))]"
+   
+  },
+  "resources": [
+   
+    {
+      "type": "Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems",
+      "apiVersion": "2020-02-02",
+      "name": "[format('{0}/{1}/{2}/{3}', parameters('vaultName'), variables('backupFabric'), variables('protectionContainer'), variables('protectedItem'))]",
+      "properties": {
+        "protectedItemType": "Microsoft.Compute/virtualMachines",
+        "policyId": "[format('{0}/backupPolicies/{1}', resourceId('Microsoft.RecoveryServices/vaults', parameters('vaultName')), variables('backupPolicyName'))]",
+        "sourceResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.RecoveryServices/vaults', parameters('vaultName'))]",
+        "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+      ]
+    }
+  ]
+}

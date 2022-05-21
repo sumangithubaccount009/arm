@@ -1,0 +1,47 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "EastUS" 
+        },
+        "workspaceName": {
+            "value": "edhtestwrkspace001" 
+        },
+        "tier": {
+            "value": "premium"
+        },
+        "tagValues": {
+            "value": {
+                "new":"car"
+            }
+        },
+        "enableNoPublicIp": {
+            "value": false 
+        },
+        "vnetName": {
+            "value": "testvnet2" 
+        },
+        "vnetRG": {
+            "value": "testrg1" 
+        },
+        "vnetId": {
+            "value": "/subscriptions/05ee859f-a527-4975-91c3-d2711f14b894/resourceGroups/testrg1/providers/Microsoft.Network/virtualNetworks/testvnet2" 
+        },
+        "publicSubnetName": {
+            "value": "edhdbxpubsub1" 
+        },
+        "publicSubnetCIDR": {
+            "value": "10.1.0.0/24" 
+        },
+        "privateSubnetName": {
+            "value": "edhdbxprvsub1" 
+        },
+        "privateSubnetCIDR": {
+            "value": "10.1.1.0/24" 
+        },
+        "nsgName": {
+            "value": "edhdbxnewnsg3" 
+        }
+    }
+}

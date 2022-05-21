@@ -1,0 +1,52 @@
+
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters":  {
+    "DatabaseName": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies a name for generating resource names."
+      }
+    },
+	 {
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies a name for generating resource names."
+      }
+    },
+	{
+    "tags": {
+      "type": "object"
+           
+    }
+  }
+
+  "resources": [
+  {
+  "type": "Microsoft.Sql/managedInstances/databases",
+  "apiVersion": "2021-05-01-preview",
+  "name": "[parameters('DatabaseName')]",
+  "location": "[parameters('location')]",
+  "tags": "[parameters('tags')]",
+  "properties": {
+    "autoCompleteRestore": "bool",
+    "catalogCollation": "string",
+    "collation": "string",
+    "createMode": "string",
+    "lastBackupName": "string",
+    "longTermRetentionBackupResourceId": "string",
+    "recoverableDatabaseId": "string",
+    "restorableDroppedDatabaseId": "string",
+    "restorePointInTime": "string",
+    "sourceDatabaseId": "string",
+    "storageContainerSasToken": "string",
+    "storageContainerUri": "string"
+  }
+}
+  
+  ],
+  "outputs": {}
+}
+

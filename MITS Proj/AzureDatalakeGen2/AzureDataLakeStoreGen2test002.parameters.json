@@ -1,0 +1,37 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageAccountName": {
+            "value": "adlstest0009" 
+        },
+        "storageSku": {
+            "value": "Standard_LRS"
+        },
+        "Environment": {
+            "value": "DEV" 
+        },
+        "Project": {
+            "value": "EDH" 
+        },
+        "vnetName": {
+            "value": "testvnet01" 
+        },
+        "subnet1Name": {
+            "value": "Default" 
+        },
+        "privateEndpointName": {
+            "value": "testendpoint" 
+        },
+
+        "networkInterfaceName": {
+            "value": "testnic123" 
+        },
+        "Networkrg": {
+            "value": "testrg1" 
+        },
+        "privateEndpointName2": {
+            "value": "testendpoint002" 
+        }
+    }
+}

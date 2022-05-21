@@ -1,0 +1,257 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "0.0.0.1",
+    "parameters": {
+        "storageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "The prefix to use for resources within the resource group"
+            }
+        },
+
+        "storageSku": {
+            "type": "string",
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_ZRS",
+                "Standard_GRS",
+                "Standard_RAGRS"
+            ],
+            "metadata": {
+                "description": "Defines the type of storage account to use for the data lake store"
+            }
+        },
+
+        "Environment": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+
+        "Project": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "subnet1Name": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "privateEndpointName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "privateDnsZoneName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "pvtendpointdnsgroupname": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "networkInterfaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        
+        },
+       
+        "Networkrg": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        }
+     },
+    "variables": {
+        "storageAccountApiVersion": "[utils.apiVersion('Microsoft.Storage', 'storageAccounts')]",
+        
+        "storageAccountResourceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+    },
+    "functions": [
+        {
+            "namespace": "utils",
+            "members": {
+                "apiVersion": {
+                    "parameters": [
+                        {
+                            "name": "providerNamespace",
+                            "type": "string"
+                        },
+                        {
+                            "name": "resourceType",
+                            "type": "string"
+                        }
+                    ],
+                    "output": {
+                        "type": "string",
+                        "value": "[providers(parameters('providerNamespace'), parameters('resourceType')).apiVersions[0]]"
+                    }
+                }
+                
+                
+            }
+        }
+    ],
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "[variables('storageAccountApiVersion')]",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "ENV": "[parameters('Environment')]",
+                "PROJECT": "[parameters('Project')]"
+            },
+     
+            "name": "[parameters('storageAccountName')]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "[parameters('storageSku')]"
+            },
+            "properties": {
+                "encryption": {
+                    "keySource": "Microsoft.Storage",
+                    "services": {
+                        "blob": {
+                            "enabled": true
+                        },
+                        "file": {
+                            "enabled": true
+                        }
+                    }
+                },
+                "isHnsEnabled": true,
+                "supportsHttpsTrafficOnly": true
+            }
+        },
+
+        {
+      "type": "Microsoft.Network/privateEndpoints",
+      "apiVersion": "2020-06-01",
+      "name": "[parameters('privateEndpointName')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+            ],
+      "properties": {
+        "subnet": {
+          "id": "[resourceId(parameters('Networkrg'),'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]"
+        },
+        "privateLinkServiceConnections": [
+          {
+            "name": "[parameters('privateEndpointName')]",
+            "properties": {
+              "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+              "groupIds": [
+                "blob"
+              ],
+              "privateLinkServiceConnectionState": {
+                                "status": "Approved",
+                                "description": "Auto-Approved",
+                                "actionsRequired": "None"
+                            }
+            }
+          }
+        ]
+      }
+    },
+
+        {
+      "type": "Microsoft.Network/privateDnsZones",
+      "apiVersion": "2020-01-01",
+      "name": "[parameters('privateDnsZoneName')]",
+      "location": "global",
+     
+      "properties": ""
+    },
+    
+    {
+      "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+      "apiVersion": "2020-01-01",
+      "name": "[concat(parameters('privateDnsZoneName'), '/', parameters('privateDnsZoneName'), '-link')]",
+      "location": "global",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZoneName'))]"
+       
+      ],
+      "properties": {
+        "registrationEnabled": false,
+        "virtualNetwork": {
+          "id": "[resourceId(parameters('Networkrg'),'Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+      "apiVersion": "2020-06-01",
+      "name": "[concat(parameters('pvtendpointdnsgroupname'), '/default')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpointName'))]"
+
+      ],
+      "properties": {
+        "privateDnsZoneConfigs": [
+          {
+            "name": "privatelink-blob-core-windows-net",
+            "properties": {
+              "privateDnsZoneId": "[resourceId('Microsoft.Network/privateDnsZones', parameters('privateDnsZoneName'))]"
+            }
+          }
+        ]
+      }
+    },
+    
+    {
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2020-06-01",
+      "name": "[parameters('networkInterfaceName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "displayName": "[parameters('networkInterfaceName')]"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipConfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+             
+              "subnet": {
+                "id": "[resourceId(parameters('Networkrg'),'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]"
+              }
+            }
+          }
+        ]
+      }
+    }
+    ],
+    "outputs": {
+        "storageAccountName": {
+            "type": "string",
+            "value": "[parameters('storageAccountName')]"
+        },
+        "storageAccountConnectionString": {
+            "type": "string",
+            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(variables('storageAccountResourceId'), variables('storageAccountApiVersion')).keys[0].value)]"
+        }
+    }
+}

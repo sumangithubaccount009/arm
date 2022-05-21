@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vaultName": {
+            "value": "hdp-edc-dev-rsvault1"
+        },
+        "enableCRR": {
+            "value": true
+        },
+        "vaultStorageType": {
+            "value": "GeoRedundant"
+        },
+        "location": {
+            "value": "eastus" 
+        },
+        "resourceGroupname": {
+            "value": "hdp-edc-dev-rg" 
+        },
+        "vnetName": {
+            "value": "newvnet01"
+        },
+        "subnet1Name": {
+            "value": "default"
+        },
+        "privateEndpointName": {
+            "value": "hdpedcdevrs-vault-pe1"
+        },
+        "Networkrg": {
+            "value": "netrg"
+        },
+        "builtInRoleType": {
+            "value": "Contributor" 
+        },
+        "roleNameGuid": {
+            "value": "4d1fb488-1426-4bd6-9227-d9dbab1b1310"
+        },
+        "tags": {
+            "value": {
+                    "ENV": "PRD",
+                    "PROJECT": "EDC",
+                    "CostCenter": "6711",
+                    "BusinessUnit": "Advanced_Analytics",
+                    "Owner": "rgelburd@hersheys.com"
+            }
+        }
+    }
+}

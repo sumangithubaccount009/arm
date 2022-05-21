@@ -1,0 +1,15 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2018-09-01-preview",
+            "name": "adsadsad",
+            "properties": {
+                "roleDefinitionId": "/subscriptions/5119627f-9d75-40a2-b881-d722b9dc4769/providers/Microsoft.Authorization/roleDefinitions/acdd72a7-3385-48ef-bd42-f606fba81ae7",
+                "principalId": "8f34c588-49d2-4162-af30-6c601568b10f"
+            }
+        }
+    ]
+}

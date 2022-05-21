@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+     
+     "DatabaseName": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies a name for generating resource names."
+      }
+    },
+    "location": {
+        "type": "string",
+        "metadata": {
+            "description": "description"
+        }
+    },
+    "tags": {
+        "type": "object",
+        "metadata": {
+            "description": "description"
+        }
+    }
+
+
+
+    },
+    "resources": [
+     {
+  "type": "Microsoft.Sql/managedInstances/databases",
+  "apiVersion": "2021-05-01-preview",
+  "name": "[parameters('DatabaseName')]",
+  "location": "[parameters('location')]",
+  "tags": "[parameters('tags')]",
+  "properties": {
+    "autoCompleteRestore": "bool",
+    "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+    "collation": "SQL_Latin1_General_CP1_CI_AS",
+    "createMode": "Default"
+  }
+}
+
+
+    ],
+    "outputs": {}
+}

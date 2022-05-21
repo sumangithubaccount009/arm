@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ProjectName": {
+            "value": "Armtest01"
+        },
+        "adminUsername": {
+            "value": "suman009" 
+        },
+        "adminPassword": {
+            "value": "Asdfgh@12345"
+        },
+        "dnsLabelPrefix": {
+            "value": "testsuman003" 
+        },
+        "publicIpName": {
+            "value": "myPublicIP3"
+        },
+        "publicIPAllocationMethod": {
+            "value": "Dynamic"
+        },
+        "publicIpSku": {
+            "value": "Basic"
+        },
+        "OSVersion": {
+            "value": "2019-Datacenter"
+        },
+        "vmSize": {
+            "value": "Standard_D2_v3"
+        },  
+        "vmName": {
+            "value": "simple-vm3"
+        }
+    }
+}

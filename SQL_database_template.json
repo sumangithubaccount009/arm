@@ -1,0 +1,205 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.4.1124.51302",
+      "templateHash": "83557446380333556"
+    }
+  },
+  "parameters": {
+    "serverName": {
+      "type": "string",
+      "defaultValue": "[uniqueString('sql', resourceGroup().id)]",
+      "metadata": {
+        "description": "The name of the SQL logical server."
+      }
+    },
+    "sqlDBName": {
+      "type": "string",
+      "defaultValue": "SampleDB",
+      "metadata": {
+        "description": "The name of the SQL Database."
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources."
+      }
+    },
+    "administratorLogin": {
+      "type": "string",
+      "metadata": {
+        "description": "The administrator username of the SQL logical server."
+      }
+    },
+    "administratorLoginPassword": {
+      "type": "secureString",
+      "metadata": {
+        "description": "The administrator password of the SQL logical server."
+      }
+    },
+	 "networkrg": {
+     "type": "string",
+     "metadata": {
+       "description":"resourcegroup of vnet"
+     }
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "defaultValue": "SQLMI-VNET",
+      "metadata": {
+        "description": "Enter virtual network name. If you leave this field blank name will be created by the template."
+      }
+    },
+ 
+    "subnetName": {
+      "type": "string",
+      "defaultValue": "ManagedInstance",
+      "metadata": {
+        "description": "Enter subnet name."
+      }
+    },
+ 
+    "skuName": {
+      "type": "string",
+      "defaultValue": "GP_Gen5",
+      "allowedValues": [
+        "GP_Gen5",
+        "BC_Gen5"
+      ],
+      "metadata": {
+        "description": "Enter sku name."
+      }
+    },
+    "vCores": {
+      "type": "int",
+      "defaultValue": 16,
+      "allowedValues": [
+        4,
+        8,
+        16,
+        24,
+        32,
+        40,
+        64,
+        80
+      ],
+      "metadata": {
+        "description": "Enter number of vCores."
+      }
+    },
+    "storageSizeInGB": {
+      "type": "int",
+      "defaultValue": 256,
+      "maxValue": 8192,
+      "minValue": 32,
+      "metadata": {
+        "description": "Enter storage size."
+      }
+    },
+    "licenseType": {
+      "type": "string",
+      "defaultValue": "LicenseIncluded",
+      "allowedValues": [
+        "BasePrice",
+        "LicenseIncluded"
+      ],
+      "metadata": {
+        "description": "Enter license type."
+      }
+    },
+	 "tags": {
+        "type": "object",
+        "metadata": {
+            "description": "description"
+        }
+    },
+	"zoneRedundant": {
+            "type": "bool",
+            "defaultValue": false
+        },
+		"administrators": {
+            "type": "object",
+            "defaultValue": {}
+        },
+		 "tier": {
+            "type": "string"
+        },
+		"numberOfReplicas": {
+            "type": "int",
+            "defaultValue": 0
+        },
+		 "allowClientIp": {
+            "type": "bool",
+            "defaultValue": false
+        },
+		"clientIpRuleName": {
+            "type": "string",
+            "defaultValue": ""
+        },
+		 "clientIpValue": {
+            "type": "string",
+            "defaultValue": ""
+        }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Sql/servers",
+      "apiVersion": "2021-05-01-preview",
+      "name": "[parameters('serverName')]",
+      "location": "[parameters('location')]",
+	  "tags": "[parameters('tags')]",
+      "properties": {
+        "version": "12.0",
+        "administratorLogin": "[parameters('administratorLogin')]",
+        "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+		"administrators": "[parameters('administrators')]",
+		"subnetId": "[resourceId(parameters('networkrg'),'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+       
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/databases",
+      "apiVersion": "2021-05-01-preview",
+      "name": "[parameters('sqlDBName')]",
+      "location": "[parameters('location')]",
+	  "tags": "[parameters('tags')]",
+      "sku": {
+        "name": "[parameters('skuName')]",
+           "tier": "[parameters('tier')]"
+      },
+	  "properties": {
+	   "storageSizeInGB": "[parameters('storageSizeInGB')]",
+        "vCores": "[parameters('vCores')]",
+		"zoneRedundant": "[parameters('zoneRedundant')]",
+        "licenseType": "[parameters('licenseType')]",
+        "collation": "SQL_Latin1_General_CP1_CI_AS"
+	  },
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', parameters('serverName'))]"
+      ]
+    },
+
+      {
+      
+                    "condition": "[parameters('allowClientIp')]",
+                    "apiVersion": "2014-04-01-preview",
+                    "dependsOn": [
+                        "[concat('Microsoft.Sql/servers/', parameters('serverName'))]"
+                    ],
+                    "location": "[parameters('location')]",
+                    "name": "[parameters('clientIpRuleName')]",
+                    "properties": {
+                        "endIpAddress": "[parameters('clientIpValue')]",
+                        "startIpAddress": "[parameters('clientIpValue')]"
+                    },
+                    "type": "Microsoft.Sql/servers/firewallRules"
+    }
+    
+    ]
+	}
+  

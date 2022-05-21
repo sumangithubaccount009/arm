@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageAccountName": {
+            "value": "testabcd001sum0009" 
+        },
+        "storageSku": {
+            "value": "Standard_LRS"
+        },
+        "Environment": {
+            "value": "DEV" 
+        },
+        "Project": {
+            "value": "EDH" 
+        },
+        "vnetName": {
+            "value": "testvnet01"
+        },
+        "subnet1Name": {
+            "value": "default" 
+        },
+        "privateEndpointName": {
+            "value": "testendpoint0009" 
+        },
+        "privateDnsZoneName": {
+            "value": "privatelink5.blob.core.windows.net" 
+        },
+        "pvtendpointdnsgroupname": {
+            "value": "testendpoint0009" 
+        },
+        "networkInterfaceName": {
+            "value": "newnetinf10" 
+        },
+        "Networkrg": {
+            "value": "testrg1" 
+        }
+    }
+}

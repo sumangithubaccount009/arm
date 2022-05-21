@@ -1,0 +1,220 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-08-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+      "workspaceName": {
+          "type": "string",
+          "metadata": {
+            "description": "Name of the workspace."
+          }
+      },
+      "sku": {
+          "type": "string",
+          "allowedValues": [
+            "pergb2018",
+            "Free",
+            "Standalone",
+            "PerNode",
+            "Standard",
+            "Premium"
+            ],
+          "defaultValue": "pergb2018",
+          "metadata": {
+          "description": "Pricing tier: PerGB2018 or legacy tiers (Free, Standalone, PerNode, Standard or Premium) which are not available to all customers."
+          }
+        },
+        "location": {
+          "type": "string",
+          "allowedValues": [
+          "australiacentral", 
+          "australiaeast", 
+          "australiasoutheast", 
+          "brazilsouth",
+          "canadacentral", 
+          "centralindia", 
+          "centralus", 
+          "eastasia", 
+          "eastus", 
+          "eastus2", 
+          "francecentral", 
+          "japaneast", 
+          "koreacentral", 
+          "northcentralus", 
+          "northeurope", 
+          "southafricanorth", 
+          "southcentralus", 
+          "southeastasia",
+          "switzerlandnorth",
+          "switzerlandwest",
+          "uksouth", 
+          "ukwest", 
+          "westcentralus", 
+          "westeurope", 
+          "westus", 
+          "westus2" 
+          ],
+          "metadata": {
+              "description": "Specifies the location for the workspace."
+              }
+        },
+        "retentionInDays": {
+          "type": "int",
+          "defaultValue": 120,
+          "metadata": {
+            "description": "Number of days to retain data."
+          }
+        },
+        "resourcePermissions": {
+          "type": "bool",
+          "metadata": {
+            "description": "true to use resource or workspace permissions. false to require workspace permissions."
+          }
+      },
+      "privateEndpointName": {
+        "type": "string",
+        "metadata": {
+          "description": "description"
+        }
+      },
+      "Networkrg": {
+        "type": "string", 
+        "metadata": {
+          "description": "description"
+        }
+      },
+      "vnetName": {
+        "type": "string",
+        "metadata": {
+          "description": "description"
+        }
+      },
+      "subnet1Name": {
+        "type": "string",
+        "metadata": {
+          "description": "description"
+        }
+      },
+      "private_link_scope_name": {
+        "type": "string",
+        "metadata": {
+          "description": "description"
+        }
+      }
+
+      },
+      "resources": [
+      {
+          "type": "Microsoft.OperationalInsights/workspaces",
+          "name": "[parameters('workspaceName')]",
+          "apiVersion": "2020-08-01",
+          "location": "[parameters('location')]",
+          "properties": {
+              "sku": {
+                  "name": "[parameters('sku')]"
+              },
+              "retentionInDays": "[parameters('retentionInDays')]",
+              "features": {
+                  "searchVersion": 1,
+                  "legacy": 0,
+                  "enableLogAccessUsingOnlyResourcePermissions": "[parameters('resourcePermissions')]"
+              }
+          }
+      },
+             {
+            "type": "microsoft.insights/privatelinkscopes",
+            "apiVersion": "2021-07-01-preview",
+            "name": "[parameters('private_link_scope_name')]",
+            "location": "global",
+            "properties": {
+                "accessModeSettings":{
+                    "queryAccessMode":"Open",
+                    "ingestionAccessMode":"Open"
+                }
+            }
+        },
+        {
+            "type": "microsoft.insights/privatelinkscopes/scopedresources",
+            "apiVersion": "2019-10-17-preview",
+            "name": "[concat(parameters('private_link_scope_name'), '/', concat(parameters('workspaceName'), '-connection'))]",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/privatelinkscopes', parameters('private_link_scope_name'))]",
+                "[resourceId('microsoft.operationalinsights/workspaces', parameters('workspaceName'))]"
+            ],
+            "properties": {
+                "linkedResourceId": "[resourceId('microsoft.operationalinsights/workspaces', parameters('workspaceName'))]"
+            }
+        },
+
+      {
+          "type": "Microsoft.OperationalInsights/workspaces",
+          "name": "[parameters('workspaceName')]",
+          "apiVersion": "2020-08-01",
+          "location": "[parameters('location')]",
+          "properties": {
+              "sku": {
+                  "name": "[parameters('sku')]"
+              },
+              "retentionInDays": "[parameters('retentionInDays')]",
+              "features": {
+                  "searchVersion": 1,
+                  "legacy": 0,
+                  "enableLogAccessUsingOnlyResourcePermissions": "[parameters('resourcePermissions')]"
+              }
+          }
+      },
+             {
+            "type": "microsoft.insights/privatelinkscopes",
+            "apiVersion": "2021-07-01-preview",
+            "name": "[parameters('private_link_scope_name')]",
+            "location": "global",
+            "properties": {
+                "accessModeSettings":{
+                    "queryAccessMode":"Open",
+                    "ingestionAccessMode":"Open"
+                }
+            }
+        },
+        {
+            "type": "microsoft.insights/privatelinkscopes/scopedresources",
+            "apiVersion": "2019-10-17-preview",
+            "name": "[concat(parameters('private_link_scope_name'), '/', concat(parameters('workspaceName'), '-connection'))]",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/privatelinkscopes', parameters('private_link_scope_name'))]",
+                "[resourceId('microsoft.operationalinsights/workspaces', parameters('workspaceName'))]"
+            ],
+            "properties": {
+                "linkedResourceId": "[resourceId('microsoft.operationalinsights/workspaces', parameters('workspaceName'))]"
+            }
+        },
+       {
+      "type": "Microsoft.Network/privateEndpoints",
+      "apiVersion": "2020-06-01",
+      "name": "[parameters('privateEndpointName')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
+            ],
+      "properties": {
+        "subnet": {
+          "id": "[resourceId(parameters('Networkrg'),'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]"
+        },
+        "privateLinkServiceConnections": [
+          {
+            "name": "[parameters('privateEndpointName')]", 
+            "properties": {
+              "privateLinkServiceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]",
+              "groupIds": [
+                "vault"
+              ],
+              "privateLinkServiceConnectionState": {
+                                "status": "Approved",
+                                "description": "Auto-Approved",
+                                "actionsRequired": "None"
+                            }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,161 @@
+ {
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+     
+     "DatabaseName1": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies a name for generating resource names."
+      }
+    },
+	
+     
+     "DatabaseName2": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies a name for generating resource names."
+      }
+    },
+	
+     
+     "DatabaseName3": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies a name for generating resource names."
+      }
+    },
+	
+     
+     "DatabaseName4": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies a name for generating resource names."
+      }
+    },
+	
+     
+     "DatabaseName5": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies a name for generating resource names."
+      }
+    },
+	
+     
+     "DatabaseName6": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies a name for generating resource names."
+      }
+    },
+	
+     
+     "DatabaseName7": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies a name for generating resource names."
+      }
+    },
+    "location": {
+        "type": "string",
+        "metadata": {
+            "description": "description"
+        }
+    },
+    "tags": {
+        "type": "object",
+        "metadata": {
+            "description": "description"
+        }
+    }
+
+    },
+    "resources": [
+     {
+  "type": "Microsoft.Sql/managedInstances/databases",
+  "apiVersion": "2021-05-01-preview",
+  "name": "[parameters('DatabaseName1')]",
+  "location": "[parameters('location')]",
+  "tags": "[parameters('tags')]",
+  "properties": {
+      "collation": "SQL_Latin1_General_CP1_CI_AS"
+   
+  }
+},
+
+     {
+  "type": "Microsoft.Sql/managedInstances/databases",
+  "apiVersion": "2021-05-01-preview",
+  "name": "[parameters('DatabaseName2')]",
+  "location": "[parameters('location')]",
+  "tags": "[parameters('tags')]",
+  "properties": {
+      "collation": "SQL_Latin1_General_CP1_CI_AS"
+   
+  }
+},
+ 
+     {
+  "type": "Microsoft.Sql/managedInstances/databases",
+  "apiVersion": "2021-05-01-preview",
+  "name": "[parameters('DatabaseName3')]",
+  "location": "[parameters('location')]",
+  "tags": "[parameters('tags')]",
+  "properties": {
+      "collation": "SQL_Latin1_General_CP1_CI_AS"
+   
+  }
+},
+ 
+     {
+  "type": "Microsoft.Sql/managedInstances/databases",
+  "apiVersion": "2021-05-01-preview",
+  "name": "[parameters('DatabaseName4')]",
+  "location": "[parameters('location')]",
+  "tags": "[parameters('tags')]",
+  "properties": {
+      "collation": "SQL_Latin1_General_CP1_CI_AS"
+   
+  }
+},
+
+     {
+  "type": "Microsoft.Sql/managedInstances/databases",
+  "apiVersion": "2021-05-01-preview",
+  "name": "[parameters('DatabaseName5')]",
+  "location": "[parameters('location')]",
+  "tags": "[parameters('tags')]",
+  "properties": {
+      "collation": "SQL_Latin1_General_CP1_CI_AS"
+   
+  }
+},
+
+     {
+  "type": "Microsoft.Sql/managedInstances/databases",
+  "apiVersion": "2021-05-01-preview",
+  "name": "[parameters('DatabaseName6')]",
+  "location": "[parameters('location')]",
+  "tags": "[parameters('tags')]",
+  "properties": {
+      "collation": "SQL_Latin1_General_CP1_CI_AS"
+   
+  }
+},
+ 
+     {
+  "type": "Microsoft.Sql/managedInstances/databases",
+  "apiVersion": "2021-05-01-preview",
+  "name": "[parameters('DatabaseName7')]",
+  "location": "[parameters('location')]",
+  "tags": "[parameters('tags')]",
+  "properties": {
+      "collation": "SQL_Latin1_General_CP1_CI_AS"
+   
+  }
+}
+
+    ],
+    "outputs": {}
+}
